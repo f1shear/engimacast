@@ -1,0 +1,1 @@
+# SITE IMAGES DIR
