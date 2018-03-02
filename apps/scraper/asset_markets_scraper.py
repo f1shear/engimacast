@@ -31,10 +31,32 @@ def get_text(el, xpath):
     else:
         return ''
 
+def get_link(el, xpath):
+    if len(el.xpath(xpath)) > 0:
+        links = el.xpath(xpath)
+        for link in links:
+            if 'http://' in link or 'https://' in link:
+                return link
+    return ''
+
+
 
 def extract_markets(asset):
     page = get_page(asset)
     doc = lxml.etree.HTML(page)
+
+    # other information for asset
+
+    website = get_link(doc, '//a[contains(text(), "Website")]/@href')
+    explorer = get_link(doc, '//a[contains(text(), "Explorer")]/@href')
+    coin = get_text(doc, "//span[contains(@class, 'label') and text() = 'Coin']")
+    token = get_text(doc, "//span[contains(@class, 'label') and text() = 'Token']")
+
+    extra_info = {
+        'website': website,
+        'explorer': explorer,
+        'asset_type': coin or token
+    }
 
     markets = []
 
@@ -54,7 +76,7 @@ def extract_markets(asset):
                 value = get_text(cell_doc, '//span')
             row.append(value.strip())
         market = {
-            'asset': row[1],
+            'name': row[1],
             'pair': row[2],
             'volume_usd': row[3],
             'price': row[4],
@@ -62,10 +84,14 @@ def extract_markets(asset):
             'updated': row[6]
         }
         markets.append(market)
-    return markets
+    return extra_info, markets
 
 
 if __name__ == '__main__':
     rows = extract_markets('bitcoin')
+    for item in rows:
+        logging.error(item)
+
+    rows = extract_markets('ethereum')
     for item in rows:
         logging.error(item)

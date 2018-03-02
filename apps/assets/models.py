@@ -16,19 +16,29 @@ class AssetModel(models.Model):
         CompanyModel, related_name='assets',
         null=True, blank=True, on_delete=models.CASCADE)
     asset_type = models.CharField(max_length=255, choices=ASSET_TYPES)
-    name = models.CharField(max_length=255)
-    website = models.CharField(max_length=255)
-    volume = models.FloatField(default=0.0, null=True, blank=True)
+    name = models.CharField(max_length=255, unique=True)
+    description = models.CharField(max_length=255, null=True, blank=True)
+    symbol = models.CharField(max_length=50, null=True, blank=True)
+    website = models.CharField(max_length=255, null=True, blank=True)
+    explorer = models.CharField(max_length=255, null=True, blank=True)
+    recent_cmc_rank = models.IntegerField(null=True, blank=True)
+    trading_volume = models.FloatField(default=0.0, null=True, blank=True) # 24 hour
+    total_supply = models.FloatField(default=0.0, null=True, blank=True)
+    max_supply = models.FloatField(default=0.0, null=True, blank=True)
     circulating_supply = models.FloatField(default=0.0, null=True, blank=True)
+    market_capital = models.FloatField(default=0.0, null=True, blank=True)
     latest_price = models.FloatField(default=0.0, null=True, blank=True)
     max_price = models.FloatField(default=0.0, null=True, blank=True)
     min_price = models.FloatField(default=0.0, null=True, blank=True)
 
-    created_on = models.DateTimeField(auto_now_add=True)
-    updated_on = models.DateTimeField(auto_now=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
         db_table = 'asset'
+
+    def __str__(self):
+        return self.name
 
 
 class AssetMediaModel(models.Model):
@@ -39,21 +49,25 @@ class AssetMediaModel(models.Model):
     )
     asset = models.ForeignKey(
         AssetModel, related_name='medias', on_delete=models.CASCADE)
+    ref_id=models.CharField(max_length=255)
     source = models.CharField(max_length=255)
     media_type = models.CharField(max_length=255, choices=MEDIA_TYPES)
     title = models.CharField(max_length=255)
     url = models.CharField(max_length=255)
-    description = models.TextField(default='')
+    description = models.TextField(default='', null=True, blank=True)
     sentiment_score = models.FloatField(default=0.0, null=True, blank=True)
     backlinks_count = models.FloatField(default=0.0, null=True, blank=True)
     scam_score = models.FloatField(default=0.0, null=True, blank=True)
     fud_score = models.FloatField(default=0.0, null=True, blank=True)
 
-    created_on = models.DateTimeField(auto_now_add=True)
-    updated_on = models.DateTimeField(auto_now=True)
+    published_at = models.DateTimeField(null=True, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
         db_table = 'asset_media'
+
+    def __str__(self):
+        return '%s - %s' % (self.source, self.asset)
 
 
 class MediaReactionModel(models.Model):
@@ -72,7 +86,7 @@ class MediaReactionModel(models.Model):
         AssetMediaModel, related_name='media_reactions',
         on_delete=models.CASCADE)
     reaction = models.CharField(max_length=255, choices=REACTIONS)
-    created_on = models.DateTimeField(auto_now_add=True)
+    created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
         db_table = 'media_reaction'
@@ -96,7 +110,7 @@ class AssetVoteModel(models.Model):
         null=True, blank=True, on_delete=models.SET_NULL)
     position = models.CharField(max_length=255, choices=POSITIONS)
     sentiment = models.CharField(max_length=50, choices=SENTIMENTS)
-    created_on = models.DateTimeField(auto_now_add=True)
+    created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
         db_table = 'asset_vote'
@@ -106,11 +120,11 @@ class MarketModel(models.Model):
     """ update every 24 hour """
     name = models.CharField(max_length=255)
     market_type = models.CharField(max_length=255, null=True, blank=True)
-    website = models.CharField(max_length=255)
+    website = models.CharField(max_length=255, null=True, blank=True)
     trade_volume = models.FloatField(default=0.0, null=True, blank=True)
 
-    created_on = models.DateTimeField(auto_now_add=True)
-    updated_on = models.DateTimeField(auto_now=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
         db_table = 'market'
@@ -125,13 +139,10 @@ class MarketAssetModel(models.Model):
     asset = models.ForeignKey(AssetModel, related_name='asset_markets',
                               on_delete=models.CASCADE)
     latest_price = models.FloatField(default=0.0, null=True, blank=True)
-    latest_rate = models.FloatField(default=0.0, null=True, blank=True)
     volume = models.FloatField(default=0.0, null=True, blank=True)
-    exchange_asset = models.ForeignKey(
-        AssetModel, related_name='+', on_delete=models.CASCADE)  # btc
-
-    created_on = models.DateTimeField(auto_now_add=True)
-    updated_on = models.DateTimeField(auto_now=True)
+    pair = models.CharField(max_length=255, null=True, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
         db_table = 'market_asset'
@@ -146,9 +157,10 @@ class AssetHistoryModel(models.Model):
     cmc_rank = models.FloatField(default=0.0, null=True, blank=True)
     circulating_supply = models.FloatField(default=0.0, null=True, blank=True)
     max_supply = models.FloatField(default=0.0, null=True, blank=True)
+    total_supply = models.FloatField(default=0.0, null=True, blank=True)
     trading_volume = models.FloatField(default=0.0, null=True, blank=True)
-    created_on = models.DateTimeField(auto_now_add=True)
-    updated_on = models.DateTimeField(auto_now=True)
+    market_capital = models.FloatField(default=0.0, null=True, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
         db_table = 'asset_history'
@@ -160,8 +172,8 @@ class PriceHistoryModel(models.Model):
         AssetModel, related_name='asset_price_histories',
         on_delete=models.CASCADE)
     price = models.FloatField(default=0.0, null=True, blank=True)
-    price_on = models.DateTimeField()
-    created_on = models.DateTimeField(auto_now_add=True)
+    price_at = models.DateTimeField()
+    created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
         db_table = 'price_history'
@@ -172,8 +184,8 @@ class PriceFutureModel(models.Model):
         AssetModel, related_name='asset_price_futures',
         on_delete=models.CASCADE)
     price = models.FloatField(default=0.0, null=True, blank=True)
-    price_on = models.DateTimeField()
-    created_on = models.DateTimeField(auto_now_add=True)
+    price_at = models.DateTimeField()
+    created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
         db_table = 'price_future'

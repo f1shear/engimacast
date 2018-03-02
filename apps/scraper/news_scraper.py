@@ -12,7 +12,7 @@ def get_articles(topic, headlines=False):
 
     newsapi = NewsApiClient(api_key=API_KEY)
 
-    if headlines:
+    if not headlines:
         articles = newsapi.get_everything(
             q=topic,
             language='en',
@@ -23,13 +23,12 @@ def get_articles(topic, headlines=False):
             q=topic,
             language='en',
             page_size=100)
-    return articles
+    return articles['articles']
 
 
 if __name__ == '__main__':
     articles = get_articles('bitcoin')
-    logging.error(articles)
-
-    print(' \n\n\n\n ')
-    articles = get_articles('bitcoin', True)
-    logging.error(articles)
+    for article in articles['articles']:
+        for key in article:
+            print(key)
+        break

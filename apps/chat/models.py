@@ -9,7 +9,7 @@ class ChatRoomModel(models.Model):
     created_by = models.ForeignKey(
         UserModel, related_name='+', on_delete=models.CASCADE)
     name = models.CharField(max_length=255)
-    created_on = models.DateTimeField(auto_now_add=True)
+    created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
         db_table = 'chat_room'
