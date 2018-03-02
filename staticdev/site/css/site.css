@@ -2,6 +2,9 @@
   max-width: 960px;
 }
 
+#main{
+  min-height: 650px;
+}
 /*
  * Custom translucent site header
  */
