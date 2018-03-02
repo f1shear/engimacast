@@ -47,7 +47,8 @@ INSTALLED_APPS = [
     'core',
     'assets',
     'company',
-    'chat'
+    'chat',
+    'scraper'
 ]
 
 MIDDLEWARE = [
