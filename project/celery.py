@@ -1,4 +1,5 @@
 from __future__ import absolute_import, unicode_literals
+
 from celery import Celery
 
 # set the default Django settings module for the 'celery' program.
@@ -20,11 +21,31 @@ def debug_task(self):
     print('Request: {0!r}'.format(self.request))
 
 
-from celery.schedules import crontab
+ONE_MIN = 60.0
+
+ONE_HOUR = ONE_MIN * 60.0
 
 app.conf.beat_schedule = {
-    'add-every-minute': {
+
+    'scrape-assets': {
         'task': 'scraper.tasks.scrape_assets',
-        'schedule': 60.0*5,
+        'schedule': ONE_MIN * 10,  # ever 10 minutes
+    },
+
+    'scrape-asset-markets': {
+        'task': 'scraper.tasks.asset_markets_scraper_dispatcher',
+        'schedule': ONE_HOUR * 2.1,  # every 2 hours
+    },
+    'scrape-media': {
+        'task': 'scraper.tasks.social_media_scraper_dispatcher',
+        'schedule': ONE_HOUR * 3.1,  # every 3 hour
+    },
+    'scrape-news': {
+        'task': 'scraper.tasks.news_scraper_dispatcher',
+        'schedule': ONE_HOUR * 5,  # every 5 hours
+    },
+    'scrape-domain-news': {
+        'task': 'scraper.tasks.domain_news_scraper_dispatcher',
+        'schedule': ONE_HOUR * 1,  # every 1 hour
     },
 }
