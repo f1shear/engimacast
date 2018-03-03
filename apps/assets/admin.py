@@ -12,13 +12,14 @@ from .models import (
     MarketAssetModel,
     AssetHistoryModel,
     PriceHistoryModel,
-    PriceFutureModel
+    PriceFutureModel,
+    DomainMediaModel
 )
 
 
 @admin.register(AssetModel)
 class AssetAdmin(admin.ModelAdmin):
-    list_display = ('company', 'asset_type', 'name', 'website', 'trading_volume',
+    list_display = ('cmc_id', 'company', 'asset_type', 'name', 'website', 'trading_volume',
                     'circulating_supply', 'latest_price', 'max_price',
                     'min_price', 'created_at', 'updated_at')
 
@@ -26,6 +27,13 @@ class AssetAdmin(admin.ModelAdmin):
 @admin.register(AssetMediaModel)
 class AssetMediaAdmin(admin.ModelAdmin):
     list_display = ('asset', 'ref_id', 'published_at', 'source', 'media_type', 'title', 'url',
+                    'description', 'sentiment_score', 'backlinks_count',
+                    'scam_score', 'fud_score', 'created_at',)
+
+
+@admin.register(DomainMediaModel)
+class DomainMediaAdmin(admin.ModelAdmin):
+    list_display = ('topic', 'ref_id', 'published_at', 'source', 'media_type', 'title', 'url',
                     'description', 'sentiment_score', 'backlinks_count',
                     'scam_score', 'fud_score', 'created_at',)
 

@@ -16,8 +16,9 @@ class AssetModel(models.Model):
         CompanyModel, related_name='assets',
         null=True, blank=True, on_delete=models.CASCADE)
     asset_type = models.CharField(max_length=255, choices=ASSET_TYPES)
-    name = models.CharField(max_length=255, unique=True)
-    description = models.CharField(max_length=255, null=True, blank=True)
+    cmc_id = models.CharField(max_length=255, unique=True)
+    name = models.CharField(max_length=255)
+    description = models.TextField(default='', null=True, blank=True)
     symbol = models.CharField(max_length=50, null=True, blank=True)
     website = models.CharField(max_length=255, null=True, blank=True)
     explorer = models.CharField(max_length=255, null=True, blank=True)
@@ -52,7 +53,7 @@ class AssetMediaModel(models.Model):
     ref_id=models.CharField(max_length=255)
     source = models.CharField(max_length=255)
     media_type = models.CharField(max_length=255, choices=MEDIA_TYPES)
-    title = models.CharField(max_length=255)
+    title = models.TextField(default='', null=True, blank=True)
     url = models.CharField(max_length=255)
     description = models.TextField(default='', null=True, blank=True)
     sentiment_score = models.FloatField(default=0.0, null=True, blank=True)
@@ -68,6 +69,40 @@ class AssetMediaModel(models.Model):
 
     def __str__(self):
         return '%s - %s' % (self.source, self.asset)
+
+
+class DomainMediaModel(models.Model):
+    """ common domain news """
+    MEDIA_TYPES = (
+        ('social', 'Social'),
+        ('news', 'News')
+    )
+    TOPICS = (
+        ('blockchain', 'Blockchain'),
+        ('cryptocurrency', 'Cryptocurrency'),
+        ('initial coin offerings', 'ICO'),
+        ('cryptocurrency exchange', 'Cryptocurrency Exchange')
+    )
+    topic = models.CharField(max_length=255)
+    ref_id = models.CharField(max_length=255)
+    source = models.CharField(max_length=255)
+    media_type = models.CharField(max_length=255, choices=MEDIA_TYPES)
+    title = models.TextField(default='', null=True, blank=True)
+    url = models.CharField(max_length=255)
+    description = models.TextField(default='', null=True, blank=True)
+    sentiment_score = models.FloatField(default=0.0, null=True, blank=True)
+    backlinks_count = models.FloatField(default=0.0, null=True, blank=True)
+    scam_score = models.FloatField(default=0.0, null=True, blank=True)
+    fud_score = models.FloatField(default=0.0, null=True, blank=True)
+
+    published_at = models.DateTimeField(null=True, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        db_table = 'domain_media'
+
+    def __str__(self):
+        return '%s - %s' % (self.source, self.topic)
 
 
 class MediaReactionModel(models.Model):
@@ -128,6 +163,9 @@ class MarketModel(models.Model):
 
     class Meta:
         db_table = 'market'
+
+    def __str__(self):
+        return '%s' % self.name
 
 
 class MarketAssetModel(models.Model):

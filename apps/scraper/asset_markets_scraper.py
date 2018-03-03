@@ -15,7 +15,7 @@ def get_page(asset):
     if response.status_code == 200:
         page = response.text
         return page
-    raise Exception("CMC unavailable")
+    raise Exception("CMC unavailable: [%s] %s" % (response.status_code, url))
 
 
 def get_node(el):

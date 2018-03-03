@@ -23,12 +23,18 @@ def get_articles(topic, headlines=False):
             q=topic,
             language='en',
             page_size=100)
-    return articles['articles']
+
+    if articles['status']=='ok':
+        return articles['articles']
+    else:
+        if articles['status'] == 'error':
+            logging.error(articles['message'])
+    return []
 
 
 if __name__ == '__main__':
-    articles = get_articles('bitcoin')
-    for article in articles['articles']:
+    articles = get_articles('remme')
+    for article in articles:
         for key in article:
             print(key)
         break

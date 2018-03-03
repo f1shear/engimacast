@@ -2,18 +2,25 @@ from __future__ import absolute_import, unicode_literals
 
 import datetime
 import logging
-import pytz
+import time
+
 import dateutil.parser
+import pytz
 from celery import shared_task
 
 from assets.models import (
     AssetModel, MarketModel, MarketAssetModel,
-    PriceHistoryModel, AssetHistoryModel, AssetMediaModel
+    PriceHistoryModel, AssetHistoryModel, AssetMediaModel,
+    DomainMediaModel
 )
 from scraper.asset_markets_scraper import extract_markets
 from scraper.asset_scraper import extract_assets
 from scraper.media_scraper import get_tweets
 from scraper.news_scraper import get_articles
+
+SHORT_DELAY = 2
+DELAY = 6
+LONG_DELAY = 12
 
 
 def get_usd(value):
@@ -39,13 +46,19 @@ def add(x, y):
 
 @shared_task
 def scrape_assets():
-    logging.info("Running Assets Scraper: Every 5 minutes")
-    assets = extract_assets()
+    logging.info("Running Assets Scraper")
+
+    try:
+        assets = extract_assets()
+    except Exception as e:
+        logging.error(str(e))
+        return
+
     for asset in assets:
-        logging.info('Reading asset %s' % asset['name'])
         obj, _ = AssetModel.objects.update_or_create(
-            name=asset.get('name'),
+            cmc_id=asset.get('id'),
             defaults=dict(symbol=asset.get('symbol'),
+                          name=asset.get('name'),
                           trading_volume=asset.get('24h_volume_usd'),
                           recent_cmc_rank=asset.get('rank'),
                           max_supply=asset.get('max_supply'),
@@ -95,17 +108,22 @@ def scrape_assets():
 
 @shared_task
 def asset_markets_scraper_dispatcher():
-    logging.info("Dispatch Market Scraper: Every 1 hour")
+    logging.info("Dispatching Asset Markets Scraper")
 
     eta = 0
     for asset in AssetModel.objects.all():
-        scrape_asset_markets.apply_async((asset.id), countdown=eta)
-        eta += 5
+        scrape_asset_markets.apply_async((asset.id,), countdown=eta)
+        time.sleep(SHORT_DELAY)
+
 
 @shared_task
 def scrape_asset_markets(asset_id):
     asset = AssetModel.objects.get(id=asset_id)
-    info, markets = extract_markets(asset.name)
+    try:
+        info, markets = extract_markets(asset.cmc_id)
+    except Exception as e:
+        logging.error(str(e))
+        return
 
     asset.website = info.get('website')
     asset.explorer = info.get('explorer')
@@ -127,23 +145,38 @@ def scrape_asset_markets(asset_id):
 
 
 @shared_task
-def media_scraper_dispatcher():
-    logging.info("Dispatch Market Scraper: Every 1 hour")
+def social_media_scraper_dispatcher():
+    logging.info("Dispatch Social Media Scraper etc: 1 hour")
     eta = 0
     for asset in AssetModel.objects.all():
-        scrape_media.apply_async((asset.id, ), countdown=eta)
-        eta += 5
+        scrape_social_media.apply_async((asset.id,), countdown=eta)
+        time.sleep(DELAY)
+
 
 @shared_task
-def scrape_media(asset_id):
+def news_scraper_dispatcher():
+    logging.info("Dispatch News Scraper")
+    eta = 0
+    for asset in AssetModel.objects.all().order_by('-recent_cmc_rank')[0:125]:
+        scrape_news.apply_async((asset.id,), countdown=eta)
+        time.sleep(DELAY)
 
+
+@shared_task
+def domain_news_scraper_dispatcher():
+    logging.info("Dispatch Domain News Scraper")
+    eta = 0
+    for topic, _ in DomainMediaModel.TOPICS:
+        scrape_domain_news.apply_async((topic,), countdown=eta)
+        time.sleep(DELAY)
+
+
+@shared_task
+def scrape_social_media(asset_id):
     asset = AssetModel.objects.get(id=asset_id)
-    logging.info("Running Media Scraper for %s" % asset.name)
-    tweets = get_tweets(asset.name)
-    news = get_articles(asset.name)
 
-    logging.info("Found %s tweets" % len(tweets))
-    logging.info("Found %s news" % len(news))
+    query = "%s %s" % (asset.name, asset.asset_type)
+    tweets = get_tweets(query)
 
     for tweet in tweets:
         AssetMediaModel.objects.update_or_create(
@@ -156,6 +189,14 @@ def scrape_media(asset_id):
                 published_at=dateutil.parser.parse(tweet.created_at)
             )
         )
+
+
+@shared_task
+def scrape_news(asset_id):
+    asset = AssetModel.objects.get(id=asset_id)
+
+    query = "%s %s" % (asset.name, asset.asset_type)
+    news = get_articles(query)
 
     for article in news:
         source = None
@@ -171,5 +212,41 @@ def scrape_media(asset_id):
                 description=article.get('description', ''),
                 published_at=dateutil.parser.parse(
                     article.get('publishedAt'))
+            )
+        )
+
+
+@shared_task
+def scrape_domain_news(topic):
+    news = get_articles(topic)
+
+    for article in news:
+        source = None
+        if article.get('source'):
+            source = article.get('source')['name']
+        DomainMediaModel.objects.update_or_create(
+            source=source,
+            title=article.get('title'),
+            topic=topic,
+            published_at=dateutil.parser.parse(
+                article.get('publishedAt')),
+            defaults=dict(
+                url=article.get('url'),
+                media_type='news',
+                description=article.get('description', '')
+            )
+        )
+
+    tweets = get_tweets(topic)
+
+    for tweet in tweets:
+        DomainMediaModel.objects.update_or_create(
+            ref_id=tweet.id_str,
+            topic=topic,
+            defaults=dict(
+                source='twitter.com',
+                media_type='social',
+                description=tweet.text,
+                published_at=dateutil.parser.parse(tweet.created_at)
             )
         )
