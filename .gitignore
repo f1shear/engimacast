@@ -1,7 +1,11 @@
 
-
+run_celery.sh
+run_beat.sh
+clear_celery.sh
+init.sh
 export_keys.sh
 celerybeat-schedule
+celerybeat.pid
 .idea/
 .vscode/
 *.pyc
