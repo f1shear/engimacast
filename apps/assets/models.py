@@ -1,6 +1,5 @@
 from django.db import models
 
-
 from company.models import CompanyModel
 from users.models import UserModel
 
@@ -23,7 +22,7 @@ class AssetModel(models.Model):
     website = models.CharField(max_length=255, null=True, blank=True)
     explorer = models.CharField(max_length=255, null=True, blank=True)
     recent_cmc_rank = models.IntegerField(null=True, blank=True)
-    trading_volume = models.FloatField(default=0.0, null=True, blank=True) # 24 hour
+    trading_volume = models.FloatField(default=0.0, null=True, blank=True)  # 24 hour
     total_supply = models.FloatField(default=0.0, null=True, blank=True)
     max_supply = models.FloatField(default=0.0, null=True, blank=True)
     circulating_supply = models.FloatField(default=0.0, null=True, blank=True)
@@ -51,7 +50,7 @@ class AssetMediaModel(models.Model):
     )
     asset = models.ForeignKey(
         AssetModel, related_name='medias', on_delete=models.CASCADE)
-    ref_id=models.CharField(max_length=255)
+    ref_id = models.CharField(max_length=255)
     source = models.CharField(max_length=255)
     media_type = models.CharField(max_length=255, choices=MEDIA_TYPES)
     title = models.TextField(default='', null=True, blank=True)

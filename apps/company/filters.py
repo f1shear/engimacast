@@ -1,8 +1,6 @@
 import django_filters
 
-
 from .models import CompanyModel, CompanyEventModel
-
 
 
 class CompanyFilter(django_filters.FilterSet):

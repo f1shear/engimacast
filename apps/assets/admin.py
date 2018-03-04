@@ -1,8 +1,5 @@
 from django.contrib import admin
 
-# Register your models here.
-
-
 from .models import (
     AssetModel,
     AssetMediaModel,
@@ -15,6 +12,9 @@ from .models import (
     PriceFutureModel,
     DomainMediaModel
 )
+
+
+# Register your models here.
 
 
 @admin.register(AssetModel)
@@ -40,37 +40,37 @@ class DomainMediaAdmin(admin.ModelAdmin):
 
 @admin.register(MediaReactionModel)
 class MediaReactionAdmin(admin.ModelAdmin):
-    list_display = ('user', 'media', 'reaction', 'created_at', )
+    list_display = ('user', 'media', 'reaction', 'created_at',)
 
 
 @admin.register(AssetVoteModel)
 class AssetVoteAdmin(admin.ModelAdmin):
-    list_display = ('user', 'asset', 'position', 'sentiment', 'created_at', )
+    list_display = ('user', 'asset', 'position', 'sentiment', 'created_at',)
 
 
 @admin.register(MarketModel)
 class MarketAdmin(admin.ModelAdmin):
     list_display = ('name', 'market_type',
-                    'website', 'trade_volume', )
+                    'website', 'trade_volume',)
 
 
 @admin.register(MarketAssetModel)
 class MarketAssetAdmin(admin.ModelAdmin):
-    list_display = ('market', 'asset', 'latest_price', 'volume', 'pair', )
+    list_display = ('market', 'asset', 'latest_price', 'volume', 'pair',)
 
 
 @admin.register(AssetHistoryModel)
 class AssetHistoryAdmin(admin.ModelAdmin):
     list_display = ('asset', 'price', 'popularity_score',
                     'cmc_rank', 'circulating_supply', 'max_supply',
-                    'trading_volume', 'created_at', )
+                    'trading_volume', 'created_at',)
 
 
 @admin.register(PriceHistoryModel)
 class PriceHistoryAdmin(admin.ModelAdmin):
-    list_display = ('asset', 'price', 'price_at', )
+    list_display = ('asset', 'price', 'price_at',)
 
 
 @admin.register(PriceFutureModel)
 class PriceFutureAdmin(admin.ModelAdmin):
-    list_display = ('asset', 'price', 'price_at', )
+    list_display = ('asset', 'price', 'price_at',)

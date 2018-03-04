@@ -20,11 +20,17 @@ from core.views import home
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('api/v1/', include('assets.urls')),
-    path('api/v1/', include('chat.urls')),
-    path('api/v1/', include('company.urls')),
-    path('api/v1/', include('core.urls')),
-    path('api/v1/', include('scraper.urls')),
-    path('api/v1/', include('users.urls')),
+    path('api/v1/', include('assets.api_urls')),
+    path('api/v1/', include('chat.api_urls')),
+    path('api/v1/', include('company.api_urls')),
+    path('api/v1/', include('users.api_urls')),
+
+    path('assets/', include('assets.urls')),
+    path('chat/', include('chat.urls')),
+    path('companies/', include('company.urls')),
+    path('users/', include('users.urls')),
+    path('trade/', include('trade.urls')),
+    path('site/', include('website.urls')),
+
     path('', home)
 ]

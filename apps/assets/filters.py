@@ -1,5 +1,3 @@
-
-
 import django_filters
 
 from .models import (
@@ -16,20 +14,18 @@ from .models import (
 )
 
 
-
 class AssetFilter(django_filters.FilterSet):
     class Meta:
         model = AssetModel
         fields = {
             'name': ['exact', 'icontains', ],
-            'symbol': ['exact' ],
+            'symbol': ['exact'],
             'company': ['exact'],
             'asset_type': ['exact']
         }
 
 
 class AssetMediaFilter(django_filters.FilterSet):
-
     class Meta:
         model = AssetMediaModel
         fields = {
@@ -39,17 +35,15 @@ class AssetMediaFilter(django_filters.FilterSet):
 
 
 class DomainMediaFilter(django_filters.FilterSet):
-
     class Meta:
         model = DomainMediaModel
         fields = {
-            'topic': ['exact',],
+            'topic': ['exact', ],
             'media_type': ['exact', ]
         }
 
 
 class MediaReactionFilter(django_filters.FilterSet):
-
     class Meta:
         model = MediaReactionModel
         fields = {
@@ -59,7 +53,6 @@ class MediaReactionFilter(django_filters.FilterSet):
 
 
 class AssetVoteFilter(django_filters.FilterSet):
-
     class Meta:
         model = AssetVoteModel
         fields = {
@@ -69,7 +62,6 @@ class AssetVoteFilter(django_filters.FilterSet):
 
 
 class MarketFilter(django_filters.FilterSet):
-
     class Meta:
         model = MarketModel
         fields = {
@@ -79,7 +71,6 @@ class MarketFilter(django_filters.FilterSet):
 
 
 class MarketAssetFilter(django_filters.FilterSet):
-
     class Meta:
         model = MarketAssetModel
         fields = {
@@ -89,7 +80,6 @@ class MarketAssetFilter(django_filters.FilterSet):
 
 
 class AssetHistoryFilter(django_filters.FilterSet):
-
     class Meta:
         model = AssetHistoryModel
         fields = {
@@ -98,7 +88,6 @@ class AssetHistoryFilter(django_filters.FilterSet):
 
 
 class PriceHistoryFilter(django_filters.FilterSet):
-
     class Meta:
         model = PriceHistoryModel
         fields = {
@@ -107,7 +96,6 @@ class PriceHistoryFilter(django_filters.FilterSet):
 
 
 class PriceFutureFilter(django_filters.FilterSet):
-
     class Meta:
         model = PriceFutureModel
         fields = {

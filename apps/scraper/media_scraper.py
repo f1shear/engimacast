@@ -1,4 +1,3 @@
-
 import os
 
 import twitter
@@ -23,4 +22,3 @@ def get_tweets(topic):
 if __name__ == '__main__':
     for tweet in get_tweets('bitcoin'):
         print(tweet)
-

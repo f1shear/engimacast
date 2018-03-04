@@ -1,15 +1,12 @@
-
-
-import os
 import logging
-from newsapi import NewsApiClient
+import os
 
+from newsapi import NewsApiClient
 
 API_KEY = os.environ.get("NEWS_API_KEY")
 
 
 def get_articles(topic, headlines=False):
-
     newsapi = NewsApiClient(api_key=API_KEY)
 
     if not headlines:
@@ -24,7 +21,7 @@ def get_articles(topic, headlines=False):
             language='en',
             page_size=100)
 
-    if articles['status']=='ok':
+    if articles['status'] == 'ok':
         return articles['articles']
     else:
         if articles['status'] == 'error':

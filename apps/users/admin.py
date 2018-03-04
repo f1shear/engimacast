@@ -8,4 +8,4 @@ from .models import UserModel
 class UserAdmin(admin.ModelAdmin):
     list_display = ('id', 'username', 'first_name',
                     'last_name', 'email', 'is_active', 'is_superuser',
-                    'is_staff', 'last_login', )
+                    'is_staff', 'last_login',)

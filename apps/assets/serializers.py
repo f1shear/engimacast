@@ -15,38 +15,32 @@ from .models import (
 
 
 class AssetSerializer(serializers.ModelSerializer):
-
     class Meta:
         fields = '__all__'
         model = AssetModel
 
 
 class AssetMediaSerializer(serializers.ModelSerializer):
-
     class Meta:
         fields = '__all__'
         model = AssetMediaModel
 
 
 class DomainMediaSerializer(serializers.ModelSerializer):
-
     class Meta:
         fields = '__all__'
         model = DomainMediaModel
 
 
 class MediaReactionSerializer(serializers.ModelSerializer):
-
     class Meta:
         fields = '__all__'
         model = MediaReactionModel
 
 
-
 class MediaReactionWriteSerializer(serializers.ModelSerializer):
-
     class Meta:
-        fields = ('media', 'reaction', )
+        fields = ('media', 'reaction',)
         model = MediaReactionModel
 
     def create(self, validated_data):
@@ -55,17 +49,14 @@ class MediaReactionWriteSerializer(serializers.ModelSerializer):
 
 
 class AssetVoteSerializer(serializers.ModelSerializer):
-
     class Meta:
         fields = '__all__'
         model = AssetVoteModel
 
 
-
 class AssetVoteWriteSerializer(serializers.ModelSerializer):
-
     class Meta:
-        fields = ('asset', 'position', 'sentiment', )
+        fields = ('asset', 'position', 'sentiment',)
         model = AssetVoteModel
 
     def create(self, validated_data):
@@ -74,35 +65,30 @@ class AssetVoteWriteSerializer(serializers.ModelSerializer):
 
 
 class MarketSerializer(serializers.ModelSerializer):
-
     class Meta:
         fields = '__all__'
         model = MarketModel
 
 
 class MarketAssetSerializer(serializers.ModelSerializer):
-
     class Meta:
         fields = '__all__'
         model = MarketAssetModel
 
 
 class AssetHistorySerializer(serializers.ModelSerializer):
-
     class Meta:
         fields = '__all__'
         model = AssetHistoryModel
 
 
 class PriceHistorySerializer(serializers.ModelSerializer):
-
     class Meta:
         fields = '__all__'
         model = PriceHistoryModel
 
 
 class PriceFutureSerializer(serializers.ModelSerializer):
-
     class Meta:
         fields = '__all__'
         model = PriceFutureModel

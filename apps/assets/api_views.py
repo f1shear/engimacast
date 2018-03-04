@@ -3,6 +3,7 @@ import logging
 from django.shortcuts import get_object_or_404
 from django_filters import rest_framework as filters
 from rest_framework import generics
+from rest_framework import permissions
 
 from core.permissions import IsOwnerOrReadOnly
 from .filters import (
@@ -51,17 +52,20 @@ class AssetListView(generics.ListAPIView):
     serializer_class = AssetSerializer
     filter_backends = (filters.DjangoFilterBackend,)
     filter_class = AssetFilter
+    permission_classes = None
 
 
 class AssetDetailView(generics.RetrieveAPIView):
     queryset = AssetModel.objects.all()
     serializer_class = AssetSerializer
+    permission_classes = None
 
 
 class AssetMediaListView(generics.ListAPIView):
     serializer_class = AssetMediaSerializer
     filter_backends = (filters.DjangoFilterBackend,)
     filter_class = AssetMediaFilter
+    permission_classes = None
 
     def get_asset(self, asset_id):
         return get_object_or_404(AssetModel, id=asset_id)
@@ -75,6 +79,7 @@ class AssetMediaListView(generics.ListAPIView):
 
 class AssetMediaDetailView(generics.RetrieveAPIView):
     serializer_class = AssetMediaSerializer
+    permission_classes = None
 
     def get_asset(self, asset_id):
         return get_object_or_404(AssetModel, id=asset_id)
@@ -91,17 +96,20 @@ class DomainMediaListView(generics.ListAPIView):
     serializer_class = DomainMediaSerializer
     filter_backends = (filters.DjangoFilterBackend,)
     filter_class = DomainMediaFilter
+    permission_classes = None
 
 
 class DomainMediaDetailView(generics.RetrieveAPIView):
     queryset = DomainMediaModel.objects.all()
     serializer_class = DomainMediaSerializer
+    permission_classes = None
 
 
 class MediaReactionListView(generics.ListCreateAPIView):
     """ write too """
     filter_backends = (filters.DjangoFilterBackend,)
     filter_class = MediaReactionFilter
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
 
     def get_media(self, obj_id):
         logging.error('getting media')
@@ -145,6 +153,7 @@ class AssetVoteListView(generics.ListCreateAPIView):
     """ write too """
     filter_backends = (filters.DjangoFilterBackend,)
     filter_class = AssetVoteFilter
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
 
     def get_asset(self, asset_id):
         return get_object_or_404(AssetModel, id=asset_id)

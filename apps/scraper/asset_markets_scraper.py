@@ -1,9 +1,7 @@
-
-
-import requests
 import logging
-import lxml.etree
 
+import lxml.etree
+import requests
 
 ASSET_MARKETS_PAGE = 'https://coinmarketcap.com/currencies/%s/#markets'
 
@@ -31,6 +29,7 @@ def get_text(el, xpath):
     else:
         return ''
 
+
 def get_link(el, xpath):
     if len(el.xpath(xpath)) > 0:
         links = el.xpath(xpath)
@@ -38,7 +37,6 @@ def get_link(el, xpath):
             if 'http://' in link or 'https://' in link:
                 return link
     return ''
-
 
 
 def extract_markets(asset):

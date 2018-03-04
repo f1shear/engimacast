@@ -5,7 +5,6 @@ from users.models import UserModel
 
 
 class ChatRoomModel(models.Model):
-
     created_by = models.ForeignKey(
         UserModel, related_name='+', on_delete=models.CASCADE)
     name = models.CharField(max_length=255)

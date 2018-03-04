@@ -1,7 +1,4 @@
-
-
 import requests
-
 
 CMC_API = 'https://api.coinmarketcap.com'
 

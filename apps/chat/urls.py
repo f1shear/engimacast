@@ -1,8 +1,9 @@
 from django.urls import path
 
-from . import api_views
+from . import views
 
 urlpatterns = [
-    path('chat-rooms/', api_views.ChatRoomListView.as_view()),
-    path('chat-rooms/<int:pk>/', api_views.ChatRoomDetailView.as_view())
+    path('rooms/', views.ChatRoomListView.as_view()),
+    path('rooms/<int:pk>/', views.ChatRoomDetailView.as_view()),
+    path('rooms/global/', views.ChatRoomGlobalView.as_view())
 ]

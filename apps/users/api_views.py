@@ -1,13 +1,9 @@
-
+from django_filters import rest_framework as filters
 from rest_framework import generics
 
-
-from .models import  UserModel
+from .filters import UserFilter
+from .models import UserModel
 from .serializers import UserSerializer
-
-from django_filters import rest_framework as filters
-
-from .filters import  UserFilter
 
 
 class UserListView(generics.ListAPIView):
@@ -20,4 +16,3 @@ class UserListView(generics.ListAPIView):
 class UserDetailView(generics.RetrieveUpdateAPIView):
     queryset = UserModel.objects.all()
     serializer_class = UserSerializer
-

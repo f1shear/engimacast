@@ -47,6 +47,8 @@ INSTALLED_APPS = [
     'core',
     'assets',
     'company',
+    'trade',
+    'website',
     'chat',
     'scraper'
 ]
