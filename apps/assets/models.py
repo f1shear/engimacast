@@ -37,6 +37,7 @@ class AssetModel(models.Model):
 
     class Meta:
         db_table = 'asset'
+        ordering = ['-cmc_id']
 
     def __str__(self):
         return self.name
@@ -66,6 +67,7 @@ class AssetMediaModel(models.Model):
 
     class Meta:
         db_table = 'asset_media'
+        ordering = ['-published_at']
 
     def __str__(self):
         return '%s - %s' % (self.source, self.asset)
@@ -100,6 +102,7 @@ class DomainMediaModel(models.Model):
 
     class Meta:
         db_table = 'domain_media'
+        ordering = ['-published_at']
 
     def __str__(self):
         return '%s - %s' % (self.source, self.topic)
@@ -125,6 +128,7 @@ class MediaReactionModel(models.Model):
 
     class Meta:
         db_table = 'media_reaction'
+        ordering = ['-created_at']
 
 
 class AssetVoteModel(models.Model):
@@ -149,6 +153,7 @@ class AssetVoteModel(models.Model):
 
     class Meta:
         db_table = 'asset_vote'
+        ordering = ['-created_at']
 
 
 class MarketModel(models.Model):
@@ -163,6 +168,7 @@ class MarketModel(models.Model):
 
     class Meta:
         db_table = 'market'
+        ordering = ['name']
 
     def __str__(self):
         return '%s' % self.name
@@ -184,6 +190,7 @@ class MarketAssetModel(models.Model):
 
     class Meta:
         db_table = 'market_asset'
+        ordering = ['-volume']
 
 
 class AssetHistoryModel(models.Model):
@@ -202,6 +209,7 @@ class AssetHistoryModel(models.Model):
 
     class Meta:
         db_table = 'asset_history'
+        ordering = ['-created_at']
 
 
 class PriceHistoryModel(models.Model):
@@ -215,6 +223,7 @@ class PriceHistoryModel(models.Model):
 
     class Meta:
         db_table = 'price_history'
+        ordering = ['-price_at']
 
 
 class PriceFutureModel(models.Model):
@@ -227,3 +236,4 @@ class PriceFutureModel(models.Model):
 
     class Meta:
         db_table = 'price_future'
+        ordering = ['price_at']
