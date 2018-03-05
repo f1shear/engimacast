@@ -2,7 +2,7 @@ from django.views.generic import TemplateView
 
 
 class ChatRoomListView(TemplateView):
-    template_name = "chat/list.hml"
+    template_name = "chat/rooms.html"
 
 
 class ChatRoomDetailView(TemplateView):

@@ -52,20 +52,20 @@ class AssetListView(generics.ListAPIView):
     serializer_class = AssetSerializer
     filter_backends = (filters.DjangoFilterBackend,)
     filter_class = AssetFilter
-    permission_classes = None
+    permission_classes = (permissions.AllowAny, )
 
 
 class AssetDetailView(generics.RetrieveAPIView):
     queryset = AssetModel.objects.all()
     serializer_class = AssetSerializer
-    permission_classes = None
+    permission_classes = (permissions.AllowAny,)
 
 
 class AssetMediaListView(generics.ListAPIView):
     serializer_class = AssetMediaSerializer
     filter_backends = (filters.DjangoFilterBackend,)
     filter_class = AssetMediaFilter
-    permission_classes = None
+    permission_classes = (permissions.AllowAny,)
 
     def get_asset(self, asset_id):
         return get_object_or_404(AssetModel, id=asset_id)
@@ -79,7 +79,7 @@ class AssetMediaListView(generics.ListAPIView):
 
 class AssetMediaDetailView(generics.RetrieveAPIView):
     serializer_class = AssetMediaSerializer
-    permission_classes = None
+    permission_classes = (permissions.AllowAny,)
 
     def get_asset(self, asset_id):
         return get_object_or_404(AssetModel, id=asset_id)
@@ -96,13 +96,13 @@ class DomainMediaListView(generics.ListAPIView):
     serializer_class = DomainMediaSerializer
     filter_backends = (filters.DjangoFilterBackend,)
     filter_class = DomainMediaFilter
-    permission_classes = None
+    permission_classes = (permissions.AllowAny,)
 
 
 class DomainMediaDetailView(generics.RetrieveAPIView):
     queryset = DomainMediaModel.objects.all()
     serializer_class = DomainMediaSerializer
-    permission_classes = None
+    permission_classes = (permissions.AllowAny,)
 
 
 class MediaReactionListView(generics.ListCreateAPIView):
@@ -194,11 +194,13 @@ class MarketListView(generics.ListAPIView):
     serializer_class = MarketSerializer
     filter_backends = (filters.DjangoFilterBackend,)
     filter_class = MarketFilter
+    permission_classes = (permissions.AllowAny,)
 
 
 class MarketDetailView(generics.RetrieveAPIView):
     queryset = MarketModel.objects.all()
     serializer_class = MarketSerializer
+    permission_classes = (permissions.AllowAny,)
 
 
 class MarketAssetListView(generics.ListAPIView):
@@ -206,17 +208,20 @@ class MarketAssetListView(generics.ListAPIView):
     serializer_class = MarketAssetSerializer
     filter_backends = (filters.DjangoFilterBackend,)
     filter_class = MarketAssetFilter
+    permission_classes = (permissions.AllowAny,)
 
 
 class MarketAssetDetailView(generics.RetrieveAPIView):
     queryset = MarketAssetModel.objects.all()
     serializer_class = MarketAssetSerializer
+    permission_classes = (permissions.AllowAny,)
 
 
 class AssetHistoryListView(generics.ListAPIView):
     serializer_class = AssetHistorySerializer
     filter_backends = (filters.DjangoFilterBackend,)
     filter_class = AssetHistoryFilter
+    permission_classes = (permissions.AllowAny,)
 
     def get_asset(self, asset_id):
         return get_object_or_404(AssetModel, id=asset_id)
@@ -233,6 +238,7 @@ class PriceHistoryListView(generics.ListAPIView):
     serializer_class = PriceHistorySerializer
     filter_backends = (filters.DjangoFilterBackend,)
     filter_class = PriceHistoryFilter
+    permission_classes = (permissions.AllowAny,)
 
 
 class PriceFutureListView(generics.ListAPIView):
@@ -240,3 +246,4 @@ class PriceFutureListView(generics.ListAPIView):
     serializer_class = PriceFutureSerializer
     filter_backends = (filters.DjangoFilterBackend,)
     filter_class = PriceFutureFilter
+    permission_classes = (permissions.AllowAny,)

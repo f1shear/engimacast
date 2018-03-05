@@ -3,7 +3,305 @@
 
 {% block content %}
 
-Page
+<input id="assetID" type="hidden" value="{{asset_id}}">
+
+{% verbatim %}
+
+
+<div class="container" id="assetVue">
+
+    <div class="row">
+
+        <div class="col-md-12">
+
+            <div v-if="asset!=null">
+                <h1> {{asset.name}} </h1>
+                <b>Asset Info</b>
+                <br><br>
+                Symbol: {{asset.symbol}} <br>
+                Rank: {{asset.recent_cmc_rank}} <br>
+                Price: {{asset.latest_price}} <br>
+                Website: <a :href="asset.website" target="_blank">{{asset.website}}</a> <br>
+            </div>
+
+            <br>
+
+        </div>
+
+        <div class="col-md-12">
+            <ul class="nav nav-tabs">
+                <li class="nav-item">
+                    <a class="nav-link" v-bind:class="{ active: activeTab =='history' }" @click="setTab('history')">History</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" v-bind:class="{ active: activeTab =='price' }" @click="setTab('price')">Price</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link"  v-bind:class="{ active: activeTab =='markets' }" @click="setTab('markets')">Markets</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link"  v-bind:class="{ active: activeTab =='media' }" @click="setTab('media')">News and Media</a>
+                </li>
+            </ul>
+        </div>
+        <div class="col-md-12" v-if=" activeTab=='history' ">
+            <div v-if="assetHistoryCirculatingSupplyData">
+                <line-chart :data="assetHistoryCirculatingSupplyData" :options="chartOptions"></line-chart>
+            </div>
+
+            <div v-if="assetHistoryMarketCapitalData">
+                <line-chart :data="assetHistoryMarketCapitalData" :options="chartOptions"></line-chart>
+            </div>
+
+            <div v-if="assetHistoryTradingVolumeData">
+                <line-chart :data="assetHistoryTradingVolumeData" :options="chartOptions"></line-chart>
+            </div>
+
+        </div>
+        <div class="col-md-12"  v-if=" activeTab=='price' ">
+
+            <div v-if="priceHistoryData && activeTab=='price' ">
+                <line-chart :data="priceHistoryData" :options="chartOptions"></line-chart>
+            </div>
+
+        </div>
+
+        <div class="col-md-12"  v-if=" activeTab=='markets' ">
+
+
+            <div class="row bg-dark">
+                <div class="col" style="padding: 20px; color:white"><b>Market</b></div>
+                <div class="col" style="padding: 20px; color: white;"><b>Pair</b></div>
+                <div class="col" style="padding: 20px; color:white;"><b>Volume</b></div>
+                <div class="col" style="padding: 20px; color:white;"><b>Price</b></div>
+            </div>
+            <div style="max-height: 500px; overflow-y: auto; padding-top:10px;">
+                <div class="row" v-for="item in markets">
+                    <div class="col">{{item.market}}</div>
+                    <div class="col">{{item.pair}}</div>
+                    <div class="col">{{item.volume}}</div>
+                    <div class="col">${{item.latest_price}}</div>
+                </div>
+            </div>
+
+        </div>
+        <div class="col-md-12"  v-if=" activeTab=='media' ">
+
+
+
+
+            <div class="row bg-dark">
+                <div class="col-md-3" style="padding: 20px; color:white"><b>Source</b></div>
+                <div class="col-md-6" style="padding: 20px; color: white;"><b>Info</b></div>
+                <div class="col-md-3" style="padding: 20px; color:white;"><b>Published at</b></div>
+            </div>
+            <div style="max-height: 500px; overflow-y: auto; padding-top:10px;">
+                <div class="row" v-for="item in news">
+                    <div class="col-md-3"><b>{{item.source}}</b></div>
+                    <div class="col-md-6">
+                        <b>{{item.title}}</b> <br>
+                        <p>{{item.description}}</p>
+                    </div>
+                    <div class="col-md-3">
+                        {{item.published_at|formatDate}}
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+
+</div>
+
+
+<script type="text/javascript">
+
+    $(document).ready(function () {
+        var assetVue = new Vue({
+            el: '#assetVue',
+            data: {
+                asset: null,
+                assetID: null,
+                history: [],
+                priceHistory: [],
+                news: [],
+                markets: [],
+                priceHistoryData: null,
+                assetHistoryCirculatingSupplyData: null,
+                assetHistoryMarketCapitalData: null,
+                assetHistoryTradingVolumeData: null,
+                chartOptions: {responsive: true, maintainAspectRatio: false},
+                activeTab: ''
+            },
+            mounted: function () {
+                this.assetID = $('#assetID').val();
+                this.loadAsset();
+                this.setTab('history');
+
+            },
+
+            methods: {
+                setTab: function(value){
+
+                    this.activeTab = value;
+
+                    this.priceHistoryData= null;
+                    this.assetHistoryCirculatingSupplyData = null;
+                    this.assetHistoryMarketCapitalData = null;
+                    this.assetHistoryTradingVolumeData = null;
+
+                    if(this.activeTab=='history'){
+                        this.loadAssetHistory();
+                    }else if(this.activeTab=='price'){
+                        this.loadPriceHistory();
+                    }else if(this.activeTab=='media'){
+                        this.loadNews();
+                    }else if(this.activeTab=='markets'){
+                        this.loadMarkets();
+                    }
+
+                },
+                loadAsset: function () {
+                    var that = this;
+                    $.ajax({
+                        url: '/api/v1/assets/' + that.assetID + '/'
+                    }).done(function (response) {
+                        that.asset = response;
+                        console.log(that.asset);
+                    });
+                },
+                loadAssetHistory: function () {
+                    var that = this;
+                    $.ajax({
+                        url: '/api/v1/assets/' + that.assetID + '/history/'
+                    }).done(function (response) {
+                        that.history = response.results;
+
+                        that.prepareHistoryChart(response.results);
+
+                    });
+                },
+                loadPriceHistory: function () {
+                    var that = this;
+                    $.ajax({
+                        url: '/api/v1/price-history/?asset=' + that.assetID
+                    }).done(function (response) {
+                        that.priceHistory = response.results;
+
+                        that.preparePriceChart(response.results);
+                    });
+                },
+                loadNews: function () {
+                    var that = this;
+                    $.ajax({
+                        url: '/api/v1/assets/' + that.assetID + '/media/'
+                    }).done(function (response) {
+                        that.news = response.results;
+                    });
+                },
+                loadMarkets: function () {
+                    var that = this;
+                    $.ajax({
+                        url: '/api/v1/assets-markets/?asset=' + that.assetID
+                    }).done(function (response) {
+                        that.markets = response.results;
+                    });
+                },
+                preparePriceChart: function (rows) {
+                    var labels = [];
+                    var price_data = [];
+                    for (index in rows) {
+                        item = rows[index];
+                        labels.push(index);
+                        price_data.push(item.price);
+                    }
+
+                    if (rows.length > 0) {
+                        start = moment(String(rows[0].price_at)).format('MM/DD/YYYY-HH:mm')
+                        labels[0] = start;
+                        end = moment(String(rows[rows.length - 1].price_at)).format('MM/DD/YYYY-HH:mm')
+                        labels[labels.length - 1] = end;
+                    }
+
+                    this.priceHistoryData = {
+                        labels: labels,
+                        datasets: [
+                            {
+                                label: 'Price',
+                                backgroundColor: '#f87979',
+                                data: price_data
+                            }
+                        ]
+                    };
+
+                },
+                prepareHistoryChart: function (rows) {
+
+
+                    var labels = [];
+                    var circulating_supply_data = [];
+                    var market_capital_data = [];
+                    var trading_volume_data = [];
+
+                    for (index in rows) {
+                        item = rows[index];
+                        labels.push(index);
+                        circulating_supply_data.push(item.circulating_supply);
+                        market_capital_data.push(item.market_capital);
+                        trading_volume_data.push(item.trading_volume);
+                    }
+
+                    if (rows.length > 0) {
+                        start = moment(String(rows[0].created_at)).format('MM/DD/YYYY-HH:mm');
+                        labels[0] = start;
+                        end = moment(String(rows[rows.length - 1].created_at)).format('MM/DD/YYYY-HH:mm');
+                        labels[labels.length - 1] = end;
+                    }
+
+
+                    this.assetHistoryCirculatingSupplyData = {
+                        labels: labels,
+                        datasets: [
+                            {
+                                label: 'Circulating Supply',
+                                backgroundColor: '#f87979',
+                                data: circulating_supply_data
+                            }
+                        ]
+                    };
+
+                    this.assetHistoryMarketCapitalData = {
+                        labels: labels,
+                        datasets: [
+
+                            {
+                                label: 'Market Capital',
+                                backgroundColor: '#56adf8',
+                                data: market_capital_data
+                            }
+
+                        ]
+                    };
+
+                    this.assetHistoryTradingVolumeData = {
+                        labels: labels,
+                        datasets: [
+                            {
+                                label: 'Trading Volume',
+                                backgroundColor: '#b6f8b0',
+                                data: trading_volume_data
+                            }
+                        ]
+                    };
+                }
+            }
+        });
+    });
+
+</script>
+
+{% endverbatim %}
 
 
 {% endblock %}

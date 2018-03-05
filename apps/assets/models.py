@@ -36,7 +36,7 @@ class AssetModel(models.Model):
 
     class Meta:
         db_table = 'asset'
-        ordering = ['-cmc_id']
+        ordering = ['recent_cmc_rank']
 
     def __str__(self):
         return self.name

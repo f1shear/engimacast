@@ -17,6 +17,17 @@
 
 <body>
 
+<script src="/static/node_modules/jquery/dist/jquery.min.js" type='text/javascript'></script>
+<script src="/static/node_modules/vue/dist/vue.min.js" type='text/javascript'></script>
+<script src="/static/node_modules/popper.js/dist/popper.min.js"></script>
+<script src="/static/node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
+<script src="/static/node_modules/moment/min/moment.min.js"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.1/Chart.min.js"></script>
+<script src="https://unpkg.com/vue-chartjs/dist/vue-chartjs.min.js"></script>
+
+<script src="/static/site/js/main.js"></script>
+
 {% block header %}
 <nav class="site-header sticky-top py-1">
     <div class="container d-flex flex-column flex-md-row justify-content-between">
@@ -34,7 +45,6 @@
             </svg>
         </a>
         <a class="py-2 d-none d-md-inline-block" href="/assets/">Assets</a>
-        <a class="py-2 d-none d-md-inline-block" href="/companies/">Companies</a>
         <a class="py-2 d-none d-md-inline-block" href="/trade/media/">Media</a>
         <a class="py-2 d-none d-md-inline-block" href="/chat/rooms/global/">Global Chatroom</a>
         <a class="py-2 d-none d-md-inline-block" href="/trade/tools/">Trade Tools</a>
@@ -74,7 +84,6 @@
             <h5>Resources</h5>
             <ul class="list-unstyled text-small">
                 <li><a class="text-muted" href="/assets">Assets</a></li>
-                <li><a class="text-muted" href="/companies">Companies</a></li>
                 <li><a class="text-muted" href="/trade/media">Media</a></li>
                 <li><a class="text-muted" href="/chat/rooms/global">Global Chatroom</a></li>
                 <li><a class="text-muted" href="/trade/tools">Trade Tools</a></li>
@@ -97,12 +106,7 @@
 </footer>
 {% endblock %}
 
-<!-- Bootstrap core JavaScript
-================================================== -->
-<!-- Placed at the end of the document so the pages load faster -->
-<script src="/static/node_modules/jquery/dist/jquery.min.js" type='text/javascript'></script>
-<script src="/static/node_modules/popper.js/dist/popper.min.js"></script>
-<script src="./static/node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
+
 
 
 </body>
