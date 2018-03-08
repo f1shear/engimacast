@@ -2,47 +2,97 @@
 
 
 {% block content %}
+{%  verbatim %}
 
 <div class="container">
 
-    <div class="row">
+    <div class="row" id="mediaVue">
         <div class="col-md-12">
-            <h1> Media </h1>
+            <h1> News </h1>
+            <div class="row bg-dark">
+                <div class="col-md-3" style="padding: 20px; color:white"><b>Source</b></div>
+                <div class="col-md-6" style="padding: 20px; color: white;"><b>Info</b></div>
+                <div class="col-md-3" style="padding: 20px; color:white;"><b>Published at</b></div>
+            </div>
+            <div style="max-height: 500px; overflow-y: auto; padding-top:10px;  overflow-x:hidden;">
+                <div class="row" v-for="item in news">
+                    <div class="col-md-3"><b>{{item.source}}</b></div>
+                    <div class="col-md-6">
+                        <b>{{item.title}}</b> <br>
+                        <p>{{item.description}}</p>
+                    </div>
+                    <div class="col-md-3">
+                        {{item.published_at|formatDate}}
+                    </div>
+                </div>
+            </div>
         </div>
+
         <div class="col-md-12">
-            <table class="table">
-                <thead class="thead-dark">
-                <tr>
-                    <th scope="col">#</th>
-                    <th scope="col">First</th>
-                    <th scope="col">Last</th>
-                    <th scope="col">Handle</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr>
-                    <th scope="row">1</th>
-                    <td>Mark</td>
-                    <td>Otto</td>
-                    <td>@mdo</td>
-                </tr>
-                <tr>
-                    <th scope="row">2</th>
-                    <td>Jacob</td>
-                    <td>Thornton</td>
-                    <td>@fat</td>
-                </tr>
-                <tr>
-                    <th scope="row">3</th>
-                    <td>Larry</td>
-                    <td>the Bird</td>
-                    <td>@twitter</td>
-                </tr>
-                </tbody>
-            </table>
+            <h1> Social Media </h1>
+            <div class="row bg-dark">
+                <div class="col-md-3" style="padding: 20px; color:white"><b>Source</b></div>
+                <div class="col-md-6" style="padding: 20px; color: white;"><b>Info</b></div>
+                <div class="col-md-3" style="padding: 20px; color:white;"><b>Published at</b></div>
+            </div>
+            <div style="max-height: 500px; overflow-y: auto; padding-top:10px;  overflow-x:hidden;">
+                <div class="row" v-for="item in media">
+                    <div class="col-md-3"><b>{{item.source}}</b></div>
+                    <div class="col-md-6">
+                        <b>{{item.title}}</b> <br>
+                        <p>{{item.description}}</p>
+                    </div>
+                    <div class="col-md-3">
+                        {{item.published_at|formatDate}}
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </div>
 
+
+<script type="text/javascript">
+
+    $(document).ready(function () {
+
+        var mediaVue = new Vue({
+            el: '#mediaVue',
+            data: {
+                news: [],
+                media: []
+            },
+            mounted: function () {
+                this.loadNews();
+                this.loadMedia();
+            },
+            methods: {
+
+                loadNews: function(){
+                    var that = this;
+                    $.ajax({
+                        url: '/api/v1/domain-media/?media_type=news'
+                    }).done(function(response){
+                       that.news = response.results;
+                    });
+                },
+                loadMedia: function(){
+                    var that = this;
+                    $.ajax({
+                        url: '/api/v1/domain-media/?media_type=social'
+                    }).done(function(response){
+                       that.media = response.results;
+                    });
+                },
+            }
+
+            })
+        ;
+
+    });
+
+</script>
+
+{% endverbatim %}
 
 {% endblock %}

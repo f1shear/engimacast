@@ -18,6 +18,7 @@
                 <h1> {{asset.name}} </h1>
                 <b>Asset Info</b>
                 <br><br>
+                Type: {{asset.asset_type}} <br>
                 Symbol: {{asset.symbol}} <br>
                 Rank: {{asset.recent_cmc_rank}} <br>
                 Price: {{asset.latest_price}} <br>
@@ -75,7 +76,7 @@
                 <div class="col" style="padding: 20px; color:white;"><b>Volume</b></div>
                 <div class="col" style="padding: 20px; color:white;"><b>Price</b></div>
             </div>
-            <div style="max-height: 500px; overflow-y: auto; padding-top:10px;">
+            <div style="max-height: 500px; overflow-y: auto; padding-top:10px;  overflow-x:hidden;">
                 <div class="row" v-for="item in markets">
                     <div class="col">{{item.market}}</div>
                     <div class="col">{{item.pair}}</div>
@@ -95,7 +96,7 @@
                 <div class="col-md-6" style="padding: 20px; color: white;"><b>Info</b></div>
                 <div class="col-md-3" style="padding: 20px; color:white;"><b>Published at</b></div>
             </div>
-            <div style="max-height: 500px; overflow-y: auto; padding-top:10px;">
+            <div style="max-height: 500px; overflow-y: auto; padding-top:10px;  overflow-x:hidden;">
                 <div class="row" v-for="item in news">
                     <div class="col-md-3"><b>{{item.source}}</b></div>
                     <div class="col-md-6">

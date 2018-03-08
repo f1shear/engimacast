@@ -11,25 +11,22 @@
             <h1> Assets </h1>
         </div>
         <div class="col-md-12">
-            <table class="table">
-                <thead class="thead-dark">
-                <tr>
-                    <th scope="col">#</th>
-                    <th scope="col">Asset</th>
-                    <th scope="col">Symbol</th>
-                    <th scope="col">Price (USD) </th>
-                </tr>
-                </thead>
-                <tbody class="assetsList">
-                <tr v-for="asset in assets">
-                    <th scope="row">{{asset.recent_cmc_rank}}</th>
-                    <td><a :href="'/assets/' + asset.id + '/' ">{{asset.name}}</a></td>
-                    <td>{{asset.symbol}}</td>
-                    <td>{{asset.latest_price}}</td>
-                </tr>
 
-                </tbody>
-            </table>
+            <div class="row bg-dark">
+                <div class="col-2" style="padding: 20px; color:white"><b>#</b></div>
+                <div class="col-4" style="padding: 20px; color: white;"><b>Asset</b></div>
+                <div class="col-3" style="padding: 20px; color:white;"><b>Symbol</b></div>
+                <div class="col-3" style="padding: 20px; color:white;"><b>Price</b></div>
+            </div>
+            <div style="max-height: 500px; overflow-y: auto; padding-top:10px; overflow-x:hidden;">
+                <div class="row" v-for="item in assets">
+                    <div class="col-2">{{item.recent_cmc_rank}}</div>
+                    <div class="col-4"><a :href="'/assets/' + item.id + '/' ">{{item.name}}</a></div>
+                    <div class="col-3">{{item.symbol}}</div>
+                    <div class="col-3">${{item.latest_price}}</div>
+                </div>
+            </div>
+
         </div>
     </div>
 </div>

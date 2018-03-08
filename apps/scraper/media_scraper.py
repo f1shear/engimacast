@@ -15,10 +15,14 @@ def get_twitter_client():
 def get_tweets(topic):
     client = get_twitter_client()
     results = client.GetSearch(
-        raw_query="q=topic&result_type=recent&count=100")
-    return results
+        raw_query="q=%s&result_type=recent&count=100" % topic)
+    processed = []
+    for tweet in results:
+        if tweet.lang == "en":
+            processed.append(tweet)
+    return processed
 
 
 if __name__ == '__main__':
-    for tweet in get_tweets('bitcoin'):
-        print(tweet)
+    for tweet in get_tweets('nexus coin'):
+        print(tweet.text)
