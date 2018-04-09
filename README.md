@@ -1,5 +1,12 @@
 
 
+# About
+
+  -  Scrapes current price and statistics of cryptocurrencies from CoinMarketCap
+  -  Reads twitter feeds
+  -  Reads news via news api
+  -  Frontend displays information about retrieved price statistics, twitter feeds , news about each currency 
+
 
 # Install
 
