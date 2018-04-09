@@ -8,6 +8,13 @@
   -  Frontend displays information about retrieved price statistics, twitter feeds , news about each currency 
 
 
+# Stack
+
+  -  Django
+  -  Vuejs
+  -  Bootstrap
+
+
 # Install
 
     $ virtualenv -p python 3.6 env
